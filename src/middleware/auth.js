@@ -4,14 +4,11 @@ const blogModel = require("../models/blogModel");
 // Kirtan-G
 const Authentication = async function (req, res, next) {
     try {
-        // getting token from req(header)
         let token = req.headers["x-api-key"];
         if (!token) token = req.headers["X-Api-Key"];
         if (!token) {
             return res.status(400).send({ Error: "Enter x-api-key In Header" });
         }
-
-        // token verification
         let checktoken = jwt.verify(token, "BloggingSiteProject");
         if (!checktoken) {
             return res.status(404).send({ Status: false, msg: "Enter Valid Token" });
@@ -27,7 +24,6 @@ const Authentication = async function (req, res, next) {
 }
 module.exports.Authentication = Authentication;
 
-// Salman-110 //amitvsk
 const Authrization = async function (req, res, next) {
     try {
         let token = req.headers["x-api-key"];
@@ -39,7 +35,7 @@ const Authrization = async function (req, res, next) {
         let blogId = req.params.blogId;
 
         if (blogId.length < 24) {
-            return res.status(404).send({ msg: "Enter Valid Blog-Id" });
+            return res.status(404).send({ msg:"Enter Valid Blog-Id" });
         }
         let decoded = decodedToken.authorid
         let blog = await blogModel.findById(blogId);
@@ -58,7 +54,7 @@ const Authrization = async function (req, res, next) {
     }
 }
 module.exports.Authrization = Authrization;
-const qauth = async function (req, res, next) {
+const authorise = async function (req, res, next) {
     try {
         let token = req.headers["x-api-key"];
         if (!token) token = req.headers["X-Api-Key"]
@@ -67,10 +63,6 @@ const qauth = async function (req, res, next) {
         }
         let decodedToken = jwt.verify(token, "BloggingSiteProject")
         let authorId = req.query.authorId;
-
-        if (authorId.length < 24) {
-            return res.status(404).send({ msg: "Enter Valid Blog-Id" });
-        }
         let decoded = decodedToken.authorid
         let blog = await blogModel.findOne({authorId:authorId});
         if (!blog) {
@@ -87,4 +79,4 @@ const qauth = async function (req, res, next) {
         return res.status(500).send({ msg: err.message });
     }
 }
-module.exports.qauth = qauth;
+module.exports.authorise = authorise;

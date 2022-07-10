@@ -19,7 +19,6 @@ module.exports.createBlog = createBlog;
 const getBlogs = async function (req, res) {
     try {
         let data = req.query
-        // find the all data filter and query
         let blogs = await blogModel.find({ $and: [{ isDeleted: false }, { isPublished: true }, data] });
 
         // check data exits or not
@@ -54,11 +53,11 @@ const updateblogs = async function (req, res) {
         let updateBlog1 = await blogModel.findByIdAndUpdate({ _id: Id }, {
             $set: { body: body, title: title, isPublished: isPublished, isDeleted: isDeleted },
             $push: { tags: tags, subcategory: subcategory }
-        }, { new: true })
+        }, {new: true})
 
         if (updateBlog1.isPublished == true) {
             // updating date in publishedAt if is published true
-            let update = await blogModel.findOneAndUpdate({ _id: Id }, { publishedAt: new String(Date()) });
+            let update = await blogModel.findOneAndUpdate({ _id: Id }, { publishedAt: new String(Date()) });``
         }
         if (updateBlog1.isPublished == false) {
             let update = await blogModel.findOneAndUpdate({ _id: Id }, { publishedAt: null });;
@@ -79,7 +78,7 @@ const updateblogs = async function (req, res) {
 module.exports.updateblogs = updateblogs;
 
 
-// Kirtan-G
+
 const deleteBlogs = async function (req, res) {
     try {
         let blogId = req.params.blogId;
@@ -109,7 +108,6 @@ const deleteBlogs = async function (req, res) {
                 return res.status(201).send({ status: true, data: blogDelete });
             }
             else {
-                // If the blog document doesn't exist then return an HTTP status of 404
                 return res.status(400).send({ status: false, msg: "Blog Is Deleted" });
             }
         }
@@ -119,8 +117,6 @@ const deleteBlogs = async function (req, res) {
 }
 module.exports.deleteBlogs = deleteBlogs;
 
-
-// Salman-110
 const queryDeleted = async function (req, res) {
     try {
         let data = req.query;
@@ -133,10 +129,6 @@ const queryDeleted = async function (req, res) {
         let valid = await blogModel.findOne(data);
         if (!valid) {
             return res.status(404).send({ status: false, msg: "Data doesn't exit!!" })
-        }
-
-        if (Object.values(data).length <= 0) {
-            return res.status(400).send({ status: false, msg: "Input Missing" });
         }
 
         let deleted = await blogModel.findOneAndUpdate(data, { isDeleted: true }, { new: true });

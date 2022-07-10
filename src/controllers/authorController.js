@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const authorModel = require("../models/authorModel");
 
 
-// vinitchikate
+
 const createauthor = async function (req, res) {
     try {
         let data = req.body
@@ -16,7 +16,7 @@ const createauthor = async function (req, res) {
 module.exports.createauthor = createauthor;
 
 
-// vinitchikate
+
 const authorLogin = async function (req, res) {
     try {
         let data = req.body;
@@ -26,18 +26,15 @@ const authorLogin = async function (req, res) {
         if (!author) {
             return res.status(400).send("Invalid Email-id or Password");
         }
+        let authorid = author._id.toString();
 
-        // taking id from db
-        let aid = author._id.toString();
-
-        // After validation of user creating a token
         let token = jwt.sign({
-            authorid: aid
+            authorid: authorid
         },
             "BloggingSiteProject"
         );
         res.setHeader("x-api-key", token);
-        res.send({ status: true, data: "login Successful", token });
+        res.status(200).send({ status: true, data: "login Successful", token });
     }
     catch (err) {
         return res.status(500).send({ status: false, msg: err.message })

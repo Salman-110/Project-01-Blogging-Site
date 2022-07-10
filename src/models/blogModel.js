@@ -36,6 +36,6 @@ const blogsSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         }
-    }, { timestamps: true })
+    }, {timestamps: true })
 
 module.exports = mongoose.model('blogsproject1', blogsSchema);
